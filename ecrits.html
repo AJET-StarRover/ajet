@@ -8,217 +8,61 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cinzel:wght@400;500&family=Inter:wght@300;400&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg:#0e0d0c; --text:#e8e2d8; --muted:rgba(232,226,216,0.45); --faint:rgba(232,226,216,0.12); }
+    body { background:var(--bg); color:var(--text); font-family:'Cormorant Garamond',serif; min-height:100vh; overflow-x:hidden; }
+    body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:100; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E"); opacity:0.6; }
 
-    :root {
-      --bg: #0e0d0c;
-      --text: #e8e2d8;
-      --muted: rgba(232,226,216,0.45);
-      --faint: rgba(232,226,216,0.12);
-    }
+    nav { position:fixed; top:0; left:0; right:0; z-index:50; display:flex; justify-content:space-between; align-items:center; padding:1.5rem 3rem; border-bottom:0.5px solid var(--faint); background:rgba(14,13,12,0.85); backdrop-filter:blur(12px); }
+    .nav-name { font-family:'Cinzel',serif; font-size:12px; letter-spacing:0.25em; color:var(--text); text-decoration:none; opacity:0.9; }
+    .nav-links { display:flex; gap:2.5rem; list-style:none; }
+    .nav-links a { font-family:'Inter',sans-serif; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color 0.25s; }
+    .nav-links a:hover, .nav-links a.active { color:var(--text); }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Cormorant Garamond', serif;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+    .page-header { max-width:800px; margin:0 auto; padding:8rem 3rem 3rem; border-bottom:0.5px solid var(--faint); }
+    .page-label { font-family:'Cinzel',serif; font-size:11px; letter-spacing:0.22em; color:var(--muted); margin-bottom:1rem; }
+    h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(30px,4vw,46px); font-weight:300; font-style:italic; color:var(--text); line-height:1.2; }
 
-    body::before {
-      content: '';
-      position: fixed; inset: 0; pointer-events: none; z-index: 100;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
-      opacity: 0.6;
-    }
+    .writings-list { max-width:800px; margin:0 auto; padding:0 3rem 6rem; }
 
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 1.5rem 3rem;
-      border-bottom: 0.5px solid var(--faint);
-      background: rgba(14,13,12,0.85);
-      backdrop-filter: blur(12px);
-    }
+    .writing-row { display:flex; align-items:baseline; justify-content:space-between; gap:2rem; padding:2rem 0; border-bottom:0.5px solid var(--faint); cursor:pointer; transition:opacity 0.2s; text-decoration:none; }
+    .writing-row:hover { opacity:0.7; }
+    .writing-title { font-size:22px; color:var(--text); margin-bottom:0.4rem; display:block; }
+    .writing-excerpt { font-style:italic; font-size:15px; color:rgba(232,226,216,0.35); line-height:1.6; max-width:500px; }
+    .writing-right { text-align:right; flex-shrink:0; }
+    .writing-date { font-family:'Inter',sans-serif; font-size:10px; letter-spacing:0.1em; color:rgba(232,226,216,0.2); display:block; margin-bottom:0.4rem; }
+    .writing-tag { font-family:'Inter',sans-serif; font-size:9px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(232,226,216,0.15); border:0.5px solid rgba(232,226,216,0.1); border-radius:2px; padding:2px 6px; }
 
-    .nav-name {
-      font-family: 'Cinzel', serif;
-      font-size: 12px; letter-spacing: 0.25em;
-      color: var(--text); text-decoration: none; opacity: 0.9;
-    }
+    /* Article view */
+    .article-view { display:none; max-width:680px; margin:0 auto; padding:8rem 3rem 6rem; animation:fadeUp 0.4s ease both; }
+    .article-view.visible { display:block; }
+    .back-btn { font-family:'Inter',sans-serif; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); background:none; border:none; cursor:pointer; transition:color 0.2s; margin-bottom:3rem; display:block; }
+    .back-btn:hover { color:var(--text); }
+    .article-date { font-family:'Inter',sans-serif; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:rgba(232,226,216,0.25); margin-bottom:1.5rem; display:block; }
+    .article-title { font-family:'Cormorant Garamond',serif; font-size:clamp(28px,4vw,42px); font-weight:300; font-style:italic; line-height:1.2; color:var(--text); margin-bottom:3rem; }
+    .article-body p { font-size:18px; line-height:1.95; color:rgba(232,226,216,0.65); margin-bottom:1.75rem; }
+    .article-body p:first-child { font-size:20px; color:rgba(232,226,216,0.75); }
+    .article-sep { text-align:center; color:rgba(232,226,216,0.15); margin:2.5rem 0; font-size:18px; letter-spacing:0.5em; }
 
-    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    footer { border-top:0.5px solid var(--faint); padding:2rem 3rem; display:flex; justify-content:space-between; align-items:center; max-width:800px; margin:0 auto; }
+    footer p { font-family:'Inter',sans-serif; font-size:10px; letter-spacing:0.1em; color:rgba(232,226,216,0.2); }
 
-    .nav-links a {
-      font-family: 'Inter', sans-serif;
-      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--muted); text-decoration: none; transition: color 0.25s;
-    }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
 
-    .nav-links a:hover, .nav-links a.active { color: var(--text); }
-
-    /* LIST VIEW */
-    .page-header {
-      max-width: 800px; margin: 0 auto;
-      padding: 8rem 3rem 3rem;
-      border-bottom: 0.5px solid var(--faint);
-    }
-
-    .page-label {
-      font-family: 'Cinzel', serif;
-      font-size: 11px; letter-spacing: 0.22em;
-      color: var(--muted); margin-bottom: 1rem;
-    }
-
-    h1 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(30px, 4vw, 46px);
-      font-weight: 300; font-style: italic;
-      color: var(--text); line-height: 1.2;
-    }
-
-    .writings-list {
-      max-width: 800px; margin: 0 auto;
-      padding: 0 3rem 6rem;
-    }
-
-    .writing-row {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 2rem;
-      padding: 2rem 0;
-      border-bottom: 0.5px solid var(--faint);
-      cursor: pointer;
-      transition: opacity 0.2s;
-      text-decoration: none;
-    }
-
-    .writing-row:hover { opacity: 0.7; }
-
-    .writing-left {}
-
-    .writing-title {
-      font-size: 22px;
-      color: var(--text);
-      margin-bottom: 0.4rem;
-      display: block;
-    }
-
-    .writing-excerpt {
-      font-style: italic;
-      font-size: 15px;
-      color: rgba(232,226,216,0.35);
-      line-height: 1.6;
-      max-width: 500px;
-    }
-
-    .writing-right {
-      text-align: right;
-      flex-shrink: 0;
-    }
-
-    .writing-date {
-      font-family: 'Inter', sans-serif;
-      font-size: 10px; letter-spacing: 0.1em;
-      color: rgba(232,226,216,0.2);
-      display: block; margin-bottom: 0.4rem;
-    }
-
-    .writing-tag {
-      font-family: 'Inter', sans-serif;
-      font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
-      color: rgba(232,226,216,0.15);
-      border: 0.5px solid rgba(232,226,216,0.1);
-      border-radius: 2px; padding: 2px 6px;
-    }
-
-    /* ARTICLE VIEW */
-    .article-view {
-      display: none;
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 8rem 3rem 6rem;
-      animation: fadeUp 0.4s ease both;
-    }
-
-    .article-view.visible { display: block; }
-
-    .back-btn {
-      font-family: 'Inter', sans-serif;
-      font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--muted); background: none; border: none;
-      cursor: pointer; transition: color 0.2s;
-      margin-bottom: 3rem; display: block;
-    }
-
-    .back-btn:hover { color: var(--text); }
-
-    .article-date {
-      font-family: 'Inter', sans-serif;
-      font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
-      color: rgba(232,226,216,0.25); margin-bottom: 1.5rem; display: block;
-    }
-
-    .article-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(28px, 4vw, 42px);
-      font-weight: 300; font-style: italic;
-      line-height: 1.2; color: var(--text);
-      margin-bottom: 3rem;
-    }
-
-    .article-body p {
-      font-size: 18px; line-height: 1.95;
-      color: rgba(232,226,216,0.65);
-      margin-bottom: 1.75rem;
-    }
-
-    .article-body p:first-child {
-      font-size: 20px; color: rgba(232,226,216,0.75);
-    }
-
-    .article-separator {
-      text-align: center;
-      color: rgba(232,226,216,0.15);
-      margin: 2.5rem 0;
-      font-size: 18px;
-      letter-spacing: 0.5em;
-    }
-
-    footer {
-      border-top: 0.5px solid var(--faint);
-      padding: 2rem 3rem;
-      display: flex; justify-content: space-between; align-items: center;
-      max-width: 800px; margin: 0 auto;
-    }
-
-    footer p {
-      font-family: 'Inter', sans-serif;
-      font-size: 10px; letter-spacing: 0.1em;
-      color: rgba(232,226,216,0.2);
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (max-width: 768px) {
-      nav { padding: 1.25rem 1.5rem; }
-      .nav-links { gap: 1.5rem; }
-      .page-header { padding: 7rem 1.5rem 2rem; }
-      .writings-list { padding: 0 1.5rem 4rem; }
-      .writing-row { flex-direction: column; gap: 0.5rem; }
-      .writing-right { text-align: left; }
-      .article-view { padding: 7rem 1.5rem 4rem; }
-      footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; }
+    @media(max-width:768px) {
+      nav{padding:1.25rem 1.5rem} .nav-links{gap:1.5rem}
+      .page-header{padding:7rem 1.5rem 2rem}
+      .writings-list{padding:0 1.5rem 4rem}
+      .writing-row{flex-direction:column;gap:0.5rem}
+      .writing-right{text-align:left}
+      .article-view{padding:7rem 1.5rem 4rem}
+      footer{padding:1.5rem;flex-direction:column;gap:0.5rem}
     }
   </style>
 </head>
 <body>
 
   <nav>
-    <a href="index.html" class="nav-name">VOTRE NOM</a>
+    <a href="index.html" class="nav-name" data-edit="e-nav-name">VOTRE NOM</a>
     <ul class="nav-links">
       <li><a href="index.html">Musique</a></li>
       <li><a href="journal.html">Journal</a></li>
@@ -227,51 +71,46 @@
     </ul>
   </nav>
 
-  <!-- LIST VIEW -->
   <div id="listView">
     <header class="page-header">
       <p class="page-label">Écrits</p>
-      <h1>Fragments,<br>réflexions.</h1>
+      <h1 data-edit="e-hero-title">Fragments,<br>réflexions.</h1>
     </header>
 
     <div class="writings-list">
 
-      <a class="writing-row" onclick="showArticle(0); return false;" href="#">
+      <a class="writing-row" onclick="showArticle(0);return false;" href="#">
         <div class="writing-left">
-          <span class="writing-title">Le silence avant l'attaque</span>
-          <p class="writing-excerpt">Sur ce moment suspendu entre le lever de baguette et la première note — ce vide qui n'est pas un vide.</p>
+          <span class="writing-title" data-edit="e-title-0">Le silence avant l'attaque</span>
+          <p class="writing-excerpt" data-edit="e-excerpt-0">Sur ce moment suspendu entre le lever de baguette et la première note — ce vide qui n'est pas un vide.</p>
         </div>
         <div class="writing-right">
-          <span class="writing-date">Avr. 2025</span>
-          <span class="writing-tag">Essai</span>
+          <span class="writing-date" data-edit="e-date-0">Avr. 2025</span>
+          <span class="writing-tag" data-edit="e-tag-0">Essai</span>
         </div>
       </a>
 
-      <a class="writing-row" onclick="showArticle(1); return false;" href="#">
+      <a class="writing-row" onclick="showArticle(1);return false;" href="#">
         <div class="writing-left">
-          <span class="writing-title">Notes sur la répétition</span>
-          <p class="writing-excerpt">Pourquoi revenir aux mêmes mesures des centaines de fois n'est pas de l'obstination, mais de la confiance.</p>
+          <span class="writing-title" data-edit="e-title-1">Notes sur la répétition</span>
+          <p class="writing-excerpt" data-edit="e-excerpt-1">Pourquoi revenir aux mêmes mesures des centaines de fois n'est pas de l'obstination, mais de la confiance.</p>
         </div>
         <div class="writing-right">
-          <span class="writing-date">Fév. 2025</span>
-          <span class="writing-tag">Essai</span>
+          <span class="writing-date" data-edit="e-date-1">Fév. 2025</span>
+          <span class="writing-tag" data-edit="e-tag-1">Essai</span>
         </div>
       </a>
 
-      <a class="writing-row" onclick="showArticle(2); return false;" href="#">
+      <a class="writing-row" onclick="showArticle(2);return false;" href="#">
         <div class="writing-left">
-          <span class="writing-title">Partition</span>
-          <p class="writing-excerpt">Un texte court — presque un poème — sur ce que c'est de lire une partition avant de l'entendre.</p>
+          <span class="writing-title" data-edit="e-title-2">Partition</span>
+          <p class="writing-excerpt" data-edit="e-excerpt-2">Un texte court — presque un poème — sur ce que c'est de lire une partition avant de l'entendre.</p>
         </div>
         <div class="writing-right">
-          <span class="writing-date">Jan. 2025</span>
-          <span class="writing-tag">Fragment</span>
+          <span class="writing-date" data-edit="e-date-2">Jan. 2025</span>
+          <span class="writing-tag" data-edit="e-tag-2">Fragment</span>
         </div>
       </a>
-
-      <!-- AJOUTER VOS TEXTES ICI -->
-      <!-- Copier le bloc <a class="writing-row">...</a> et modifier les champs -->
-      <!-- Ajouter le contenu correspondant dans le tableau 'articles' dans le script -->
 
     </div>
   </div>
@@ -280,69 +119,70 @@
   <div class="article-view" id="articleView">
     <button class="back-btn" onclick="showList()">← Retour aux écrits</button>
     <span class="article-date" id="artDate"></span>
-    <h1 class="article-title" id="artTitle"></h1>
+    <h2 class="article-title" id="artTitle"></h2>
     <div class="article-body" id="artBody"></div>
   </div>
 
   <footer>
-    <p>© 2025 Votre Nom</p>
+    <p data-edit="e-footer">© 2025 Votre Nom</p>
     <a href="index.html" style="font-family:Inter,sans-serif;font-size:10px;letter-spacing:0.1em;color:rgba(232,226,216,0.2);text-decoration:none;">← Retour à l'accueil</a>
   </footer>
 
+  <script src="admin.js"></script>
   <script>
+    // Les contenus des articles sont éditables via data-edit sur la liste.
+    // Le texte complet de chaque article est défini ici — modifiable en mode édition via data-edit sur artBody.
     const articles = [
       {
-        title: 'Le silence avant l\'attaque',
-        date: 'Avril 2025',
-        tag: 'Essai',
-        body: `
-          <p>Il y a un moment, juste avant que l'orchestre joue, où le silence n'est plus tout à fait du silence. Le chef a levé sa baguette. Les musiciens retiennent leur souffle. La salle, sans qu'on lui ait demandé, fait de même.</p>
-          <div class="article-separator">· · ·</div>
-          <p>Ce moment n'est pas un vide. C'est une tension — la même que dans un arc trop bandé, la même qu'entre deux personnes sur le point de se dire quelque chose d'irréversible. La musique n'a pas encore eu lieu, et pourtant elle est déjà là, comme une promesse que l'air retient.</p>
-          <p>J'ai mis des années à comprendre que ce silence faisait partie de la composition. Qu'il fallait l'écrire, dans un sens — le choisir, le préparer, lui laisser de la place. Un morceau qui commence trop vite n'a pas encore eu le temps d'exister.</p>
-          <div class="article-separator">· · ·</div>
-          <p>Remplacez ce texte par votre propre contenu. Chaque article peut être aussi court ou aussi long que vous le souhaitez.</p>
-        `
+        titleKey: 'e-title-0', dateKey: 'e-date-0', tagKey: 'e-tag-0',
+        bodyKey: 'e-body-0',
+        defaultBody: `<p>Il y a un moment, juste avant que l'orchestre joue, où le silence n'est plus tout à fait du silence. Le chef a levé sa baguette. Les musiciens retiennent leur souffle. La salle, sans qu'on lui ait demandé, fait de même.</p><div class="article-sep">· · ·</div><p>Ce moment n'est pas un vide. C'est une tension — la même que dans un arc trop bandé, la même qu'entre deux personnes sur le point de se dire quelque chose d'irréversible.</p><p>Remplacez ce texte par votre propre contenu.</p>`
       },
       {
-        title: 'Notes sur la répétition',
-        date: 'Février 2025',
-        tag: 'Essai',
-        body: `
-          <p>On répète parce qu'on ne sait pas encore. Puis on répète parce qu'on commence à savoir. Puis on répète parce qu'on veut oublier ce qu'on sait — et laisser les mains se souvenir à la place du cerveau.</p>
-          <div class="article-separator">· · ·</div>
-          <p>Il y a quelque chose d'étrange dans ce processus : la répétition est à la fois l'ennemi de la spontanéité et sa seule condition possible. On ne peut jouer librement que ce qu'on connaît trop bien pour en avoir peur.</p>
-          <p>Remplacez ce texte par votre propre contenu.</p>
-        `
+        titleKey: 'e-title-1', dateKey: 'e-date-1', tagKey: 'e-tag-1',
+        bodyKey: 'e-body-1',
+        defaultBody: `<p>On répète parce qu'on ne sait pas encore. Puis on répète parce qu'on commence à savoir. Puis on répète parce qu'on veut oublier ce qu'on sait — et laisser les mains se souvenir à la place du cerveau.</p><div class="article-sep">· · ·</div><p>Il y a quelque chose d'étrange dans ce processus : la répétition est à la fois l'ennemi de la spontanéité et sa seule condition possible.</p><p>Remplacez ce texte par votre propre contenu.</p>`
       },
       {
-        title: 'Partition',
-        date: 'Janvier 2025',
-        tag: 'Fragment',
-        body: `
-          <p>Avant d'entendre un morceau, je le lis. Pas pour le déchiffrer — pour l'imaginer. Une partition est un plan d'un bâtiment qu'on n'a pas encore construit.</p>
-          <div class="article-separator">· · ·</div>
-          <p>Les notes sur la page sont silencieuses. Elles attendent. Et dans cette attente il y a déjà quelque chose de musical — une promesse de forme, une architecture dans le vide.</p>
-          <p>Remplacez ce texte par votre propre contenu.</p>
-        `
+        titleKey: 'e-title-2', dateKey: 'e-date-2', tagKey: 'e-tag-2',
+        bodyKey: 'e-body-2',
+        defaultBody: `<p>Avant d'entendre un morceau, je le lis. Pas pour le déchiffrer — pour l'imaginer. Une partition est un plan d'un bâtiment qu'on n'a pas encore construit.</p><div class="article-sep">· · ·</div><p>Les notes sur la page sont silencieuses. Elles attendent.</p><p>Remplacez ce texte par votre propre contenu.</p>`
       }
     ];
 
+    function getEl(key) { return document.querySelector('[data-edit="'+key+'"]'); }
+    function getText(key, fallback) {
+      try {
+        const saved = JSON.parse(localStorage.getItem('site_content_v1') || '{}');
+        return saved[key] || fallback;
+      } catch(e) { return fallback; }
+    }
+
     function showArticle(idx) {
       const a = articles[idx];
-      document.getElementById('artTitle').textContent = a.title;
-      document.getElementById('artDate').textContent = a.date + ' · ' + a.tag;
-      document.getElementById('artBody').innerHTML = a.body;
+      document.getElementById('artTitle').textContent = getText(a.titleKey, getEl(a.titleKey)?.textContent || '');
+      document.getElementById('artDate').textContent = getText(a.dateKey, getEl(a.dateKey)?.textContent || '') + ' · ' + getText(a.tagKey, getEl(a.tagKey)?.textContent || '');
+
+      const body = document.getElementById('artBody');
+      body.innerHTML = getText(a.bodyKey, a.defaultBody);
+      body.dataset.edit = a.bodyKey;
+
+      // If edit mode is on, make body editable too
+      if (window.editMode) {
+        body.contentEditable = 'true';
+        body.classList.add('editable');
+        body.addEventListener('input', window.saveContent);
+      }
+
       document.getElementById('listView').style.display = 'none';
-      const av = document.getElementById('articleView');
-      av.classList.add('visible');
-      window.scrollTo(0, 0);
+      document.getElementById('articleView').classList.add('visible');
+      window.scrollTo(0,0);
     }
 
     function showList() {
       document.getElementById('listView').style.display = 'block';
       document.getElementById('articleView').classList.remove('visible');
-      window.scrollTo(0, 0);
+      window.scrollTo(0,0);
     }
   </script>
 </body>
