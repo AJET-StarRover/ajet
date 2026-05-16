@@ -2,7 +2,7 @@
 // Bouton discret en bas à droite → cliquer → entrer le mot de passe
 // Mot de passe par défaut : "edit" — changez-le ci-dessous.
 
-const ADMIN_PASSWORD = 'edit';
+const ADMIN_PASSWORD = 'Lyonnais1';
 const STORAGE_KEY = 'site_content_v1';
 
 let editMode = false;
