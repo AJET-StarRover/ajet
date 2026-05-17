@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Import — Administration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cinzel:wght@400;500&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#0e0d0c;--text:#e8e2d8;--muted:rgba(232,226,216,0.45);--faint:rgba(232,226,216,0.12);--green:rgba(120,200,140,0.8);--red:rgba(220,100,100,0.8)}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;padding:4rem 2rem;max-width:860px;margin:0 auto}
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");opacity:0.5}
+
+    .page-wrap{position:relative;z-index:1}
+    .page-header{margin-bottom:3rem;padding-bottom:2rem;border-bottom:0.5px solid var(--faint)}
+    .page-header h1{font-family:'Cinzel',serif;font-size:14px;letter-spacing:0.25em;color:var(--text);margin-bottom:0.5rem}
+    .page-header p{font-size:12px;color:var(--muted);line-height:1.6}
+    .back-link{display:inline-block;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(232,226,216,0.3);text-decoration:none;margin-bottom:2rem;transition:color 0.2s}
+    .back-link:hover{color:var(--text)}
+
+    /* Sections */
+    .section{margin-bottom:2.5rem;padding:2rem;border:0.5px solid var(--faint);border-radius:4px;background:rgba(232,226,216,0.02)}
+    .section-title{font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.2em;color:rgba(232,226,216,0.6);margin-bottom:0.5rem}
+    .section-desc{font-size:11px;color:rgba(232,226,216,0.3);margin-bottom:1.5rem;line-height:1.6}
+
+    /* Drop zone */
+    .drop-zone{border:0.5px dashed rgba(232,226,216,0.2);border-radius:3px;padding:2rem;text-align:center;cursor:pointer;transition:all 0.2s;position:relative}
+    .drop-zone:hover,.drop-zone.dragover{border-color:rgba(232,226,216,0.5);background:rgba(232,226,216,0.03)}
+    .drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+    .drop-zone p{font-size:11px;color:rgba(232,226,216,0.3);pointer-events:none}
+    .drop-zone .filename{font-size:12px;color:var(--green);margin-top:0.5rem}
+
+    /* Filters */
+    .filters{display:flex;gap:1rem;margin:1.25rem 0;flex-wrap:wrap;align-items:center}
+    .filter-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(232,226,216,0.3);min-width:80px}
+    .filter-group{display:flex;gap:0.5rem;flex-wrap:wrap}
+    .filter-btn{font-size:10px;letter-spacing:0.08em;padding:4px 10px;border:0.5px solid rgba(232,226,216,0.15);border-radius:2px;background:transparent;color:rgba(232,226,216,0.4);cursor:pointer;transition:all 0.15s}
+    .filter-btn.active,.filter-btn:hover{border-color:rgba(232,226,216,0.5);color:var(--text);background:rgba(232,226,216,0.05)}
+    .filter-btn.active{background:rgba(232,226,216,0.08)}
+
+    /* Preview table */
+    .preview-wrap{margin-top:1.5rem;max-height:320px;overflow-y:auto;border:0.5px solid var(--faint);border-radius:3px}
+    table{width:100%;border-collapse:collapse;font-size:12px}
+    thead{position:sticky;top:0;background:#141310;z-index:2}
+    th{padding:0.6rem 1rem;text-align:left;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(232,226,216,0.3);border-bottom:0.5px solid var(--faint);font-weight:400}
+    td{padding:0.6rem 1rem;border-bottom:0.5px solid rgba(232,226,216,0.05);color:rgba(232,226,216,0.65);vertical-align:top}
+    tr:last-child td{border-bottom:none}
+    tr:hover td{background:rgba(232,226,216,0.02)}
+    .stars{color:rgba(232,226,216,0.5);font-size:10px;letter-spacing:1px}
+    .tag{font-size:9px;letter-spacing:0.08em;text-transform:uppercase;border:0.5px solid rgba(232,226,216,0.12);border-radius:2px;padding:2px 6px;color:rgba(232,226,216,0.3)}
+    .tag.read{border-color:rgba(120,200,140,0.3);color:rgba(120,200,140,0.7)}
+    .tag.current{border-color:rgba(200,180,100,0.3);color:rgba(200,180,100,0.7)}
+    .tag.toread{border-color:rgba(232,226,216,0.1);color:rgba(232,226,216,0.25)}
+
+    /* Stats */
+    .stats{font-size:11px;color:rgba(232,226,216,0.3);margin-top:0.75rem}
+    .stats b{color:rgba(232,226,216,0.7)}
+
+    /* Import button */
+    .import-btn{margin-top:1.5rem;width:100%;padding:0.875rem;font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;background:transparent;border:0.5px solid rgba(232,226,216,0.25);color:var(--text);border-radius:3px;cursor:pointer;transition:all 0.2s}
+    .import-btn:hover:not(:disabled){background:rgba(232,226,216,0.06);border-color:rgba(232,226,216,0.5)}
+    .import-btn:disabled{opacity:0.3;cursor:not-allowed}
+
+    /* Result */
+    .result{margin-top:1rem;padding:0.75rem 1rem;border-radius:3px;font-size:11px;display:none}
+    .result.ok{background:rgba(120,200,140,0.08);border:0.5px solid rgba(120,200,140,0.2);color:var(--green)}
+    .result.err{background:rgba(220,100,100,0.08);border:0.5px solid rgba(220,100,100,0.2);color:var(--red)}
+
+    /* Global actions */
+    .global-section{margin-top:3rem;padding-top:2rem;border-top:0.5px solid var(--faint)}
+    .global-title{font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.2em;color:rgba(232,226,216,0.4);margin-bottom:1rem}
+    .action-row{display:flex;gap:1rem;flex-wrap:wrap}
+    .action-btn{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;padding:8px 18px;border-radius:3px;cursor:pointer;transition:all 0.2s;border:0.5px solid}
+    .action-btn-danger{background:transparent;border-color:rgba(220,100,100,0.3);color:rgba(220,100,100,0.7)}
+    .action-btn-danger:hover{background:rgba(220,100,100,0.08)}
+    .action-btn-export{background:transparent;border-color:rgba(232,226,216,0.2);color:rgba(232,226,216,0.5)}
+    .action-btn-export:hover{background:rgba(232,226,216,0.05);border-color:rgba(232,226,216,0.4)}
+
+    ::-webkit-scrollbar{width:4px;height:4px}
+    ::-webkit-scrollbar-track{background:transparent}
+    ::-webkit-scrollbar-thumb{background:rgba(232,226,216,0.1);border-radius:2px}
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <a href="journal.html" class="back-link">← Retour au journal</a>
+
+  <div class="page-header">
+    <h1>Import de données</h1>
+    <p>Importez vos exports Letterboxd (diary.csv) et Goodreads. Les données seront fusionnées avec le contenu existant du site — les doublons sont ignorés automatiquement.</p>
+  </div>
+
+  <!-- ── LETTERBOXD ── -->
+  <div class="section">
+    <div class="section-title">Letterboxd — Films & Séries</div>
+    <div class="section-desc">Fichier attendu : <b>diary.csv</b> exporté depuis letterboxd.com/[votre-compte]/settings/data/</div>
+
+    <div class="drop-zone" id="lbDrop">
+      <input type="file" accept=".csv" id="lbFile" onchange="handleLbFile(this)">
+      <p>Glissez votre fichier diary.csv ici<br><span style="opacity:0.5;font-size:10px;">ou cliquez pour parcourir</span></p>
+      <div class="filename" id="lbFilename"></div>
+    </div>
+
+    <div class="filters" id="lbFilters" style="display:none">
+      <span class="filter-label">Filtrer</span>
+      <div class="filter-group" id="lbRatingFilter">
+        <button class="filter-btn active" data-min="0" onclick="setLbFilter('min',0,this)">Tous</button>
+        <button class="filter-btn" data-min="3" onclick="setLbFilter('min',3,this)">≥ ★★★</button>
+        <button class="filter-btn" data-min="4" onclick="setLbFilter('min',4,this)">≥ ★★★★</button>
+        <button class="filter-btn" data-min="4.5" onclick="setLbFilter('min',4.5,this)">≥ ★★★★½</button>
+      </div>
+      <div class="filter-group">
+        <button class="filter-btn active" id="lbRewatchBtn" onclick="toggleLbRewatch(this)">Inclure rewatchs</button>
+      </div>
+    </div>
+
+    <div class="stats" id="lbStats"></div>
+    <div class="preview-wrap" id="lbPreview" style="display:none">
+      <table>
+        <thead><tr><th>Titre</th><th>Année</th><th>Date vue</th><th>Note</th><th>Rewatch</th></tr></thead>
+        <tbody id="lbBody"></tbody>
+      </table>
+    </div>
+
+    <button class="import-btn" id="lbImportBtn" disabled onclick="importLetterboxd()">Importer dans le journal</button>
+    <div class="result" id="lbResult"></div>
+  </div>
+
+  <!-- ── GOODREADS ── -->
+  <div class="section">
+    <div class="section-title">Goodreads — Lectures</div>
+    <div class="section-desc">Fichier attendu : export CSV depuis goodreads.com/review/import</div>
+
+    <div class="drop-zone" id="grDrop">
+      <input type="file" accept=".csv" id="grFile" onchange="handleGrFile(this)">
+      <p>Glissez votre fichier Goodreads ici<br><span style="opacity:0.5;font-size:10px;">ou cliquez pour parcourir</span></p>
+      <div class="filename" id="grFilename"></div>
+    </div>
+
+    <div class="filters" id="grFilters" style="display:none">
+      <span class="filter-label">Statut</span>
+      <div class="filter-group">
+        <button class="filter-btn active" onclick="setGrFilter('read',this)">Lus</button>
+        <button class="filter-btn active" onclick="setGrFilter('currently-reading',this)">En cours</button>
+        <button class="filter-btn" onclick="setGrFilter('to-read',this)">À lire</button>
+      </div>
+    </div>
+
+    <div class="stats" id="grStats"></div>
+    <div class="preview-wrap" id="grPreview" style="display:none">
+      <table>
+        <thead><tr><th>Titre</th><th>Auteur</th><th>Statut</th><th>Note</th><th>Date lue</th></tr></thead>
+        <tbody id="grBody"></tbody>
+      </table>
+    </div>
+
+    <button class="import-btn" id="grImportBtn" disabled onclick="importGoodreads()">Importer dans le journal</button>
+    <div class="result" id="grResult"></div>
+  </div>
+
+  <!-- ── ACTIONS GLOBALES ── -->
+  <div class="global-section">
+    <div class="global-title">Gestion des données</div>
+    <div class="action-row">
+      <button class="action-btn action-btn-export" onclick="exportData()">Exporter les données (JSON)</button>
+      <button class="action-btn action-btn-danger" onclick="clearFilms()">Vider les films</button>
+      <button class="action-btn action-btn-danger" onclick="clearLivres()">Vider les livres</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const STORAGE_KEY = 'site_data_v2';
+
+function getData() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+  catch(e) { return {}; }
+}
+function saveData(d) { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); }
+
+// ══ CSV PARSER ══
+function parseCSV(text) {
+  // Handle \r\n and \n
+  const lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n').filter(l => l.trim());
+  const headers = parseCSVLine(lines[0]);
+  return lines.slice(1).map(line => {
+    const vals = parseCSVLine(line);
+    const obj = {};
+    headers.forEach((h, i) => obj[h.trim()] = (vals[i] || '').trim());
+    return obj;
+  }).filter(r => Object.values(r).some(v => v));
+}
+
+function parseCSVLine(line) {
+  const result = [];
+  let cur = '', inQuote = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') {
+      if (inQuote && line[i+1] === '"') { cur += '"'; i++; }
+      else inQuote = !inQuote;
+    } else if (c === ',' && !inQuote) {
+      result.push(cur); cur = '';
+    } else cur += c;
+  }
+  result.push(cur);
+  return result;
+}
+
+// ══ LETTERBOXD ══
+let lbRows = [], lbFilterMin = 0, lbIncludeRewatch = true;
+
+function handleLbFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  document.getElementById('lbFilename').textContent = file.name;
+  const reader = new FileReader();
+  reader.onload = e => {
+    lbRows = parseCSV(e.target.result);
+    document.getElementById('lbFilters').style.display = 'flex';
+    renderLbPreview();
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+function setLbFilter(type, val, btn) {
+  lbFilterMin = parseFloat(val);
+  btn.closest('.filter-group').querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderLbPreview();
+}
+
+function toggleLbRewatch(btn) {
+  lbIncludeRewatch = !lbIncludeRewatch;
+  btn.classList.toggle('active', lbIncludeRewatch);
+  renderLbPreview();
+}
+
+function starsHtml(rating) {
+  if (!rating) return '<span style="opacity:0.2">—</span>';
+  const n = parseFloat(rating);
+  const full = Math.floor(n);
+  const half = n % 1 >= 0.5;
+  return '<span class="stars">' + '★'.repeat(full) + (half ? '½' : '') + '</span>';
+}
+
+function formatLbDate(d) {
+  if (!d) return '—';
+  const [y, m] = d.split('-');
+  const months = ['Jan.','Fév.','Mar.','Avr.','Mai','Juin','Juil.','Août','Sep.','Oct.','Nov.','Déc.'];
+  return (months[parseInt(m)-1] || m) + ' ' + y;
+}
+
+function getLbFiltered() {
+  return lbRows.filter(r => {
+    const rating = parseFloat(r['Rating']) || 0;
+    const isRewatch = r['Rewatch'] === 'Yes';
+    if (!lbIncludeRewatch && isRewatch) return false;
+    if (lbFilterMin > 0 && rating < lbFilterMin) return false;
+    return r['Name'];
+  });
+}
+
+function renderLbPreview() {
+  const filtered = getLbFiltered();
+  const tbody = document.getElementById('lbBody');
+  tbody.innerHTML = '';
+  filtered.slice(0, 80).forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${r['Name']}</td>
+      <td style="opacity:0.5">${r['Year']||'—'}</td>
+      <td>${formatLbDate(r['Watched Date'] || r['Date'])}</td>
+      <td>${starsHtml(r['Rating'])}</td>
+      <td>${r['Rewatch']==='Yes'?'<span style="opacity:0.4;font-size:10px;">↺</span>':'—'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('lbPreview').style.display = filtered.length ? 'block' : 'none';
+  document.getElementById('lbStats').innerHTML = `<b>${filtered.length}</b> entrées sélectionnées${filtered.length > 80 ? ' (80 affichées)' : ''}`;
+  document.getElementById('lbImportBtn').disabled = filtered.length === 0;
+}
+
+function importLetterboxd() {
+  const filtered = getLbFiltered();
+  const data = getData();
+  if (!data.films) data.films = [];
+
+  const existingTitles = new Set(data.films.map(f => f.title.toLowerCase()));
+  let added = 0, skipped = 0;
+
+  // Sort by watched date desc
+  filtered.sort((a,b) => {
+    const da = a['Watched Date'] || a['Date'] || '';
+    const db = b['Watched Date'] || b['Date'] || '';
+    return db.localeCompare(da);
+  });
+
+  filtered.forEach(r => {
+    const title = r['Name'];
+    if (!title) return;
+    if (existingTitles.has(title.toLowerCase())) { skipped++; return; }
+    existingTitles.add(title.toLowerCase());
+
+    const rating = parseFloat(r['Rating']);
+    const watchedDate = r['Watched Date'] || r['Date'] || '';
+    const isRewatch = r['Rewatch'] === 'Yes';
+
+    data.films.push({
+      date: formatLbDate(watchedDate),
+      title: title,
+      meta: (r['Year'] || '') + (isRewatch ? ' · Revu' : ''),
+      note: '',
+      tag: 'Film',
+      rating: rating || 0,
+      letterboxd: r['Letterboxd URI'] || ''
+    });
+    added++;
+  });
+
+  saveData(data);
+  const res = document.getElementById('lbResult');
+  res.className = 'result ok';
+  res.style.display = 'block';
+  res.textContent = `✓ ${added} films importés. ${skipped} doublons ignorés. Rendez-vous sur journal.html pour les voir.`;
+}
+
+// ══ GOODREADS ══
+let grRows = [];
+let grFilters = new Set(['read', 'currently-reading']);
+
+function handleGrFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  document.getElementById('grFilename').textContent = file.name;
+  const reader = new FileReader();
+  reader.onload = e => {
+    grRows = parseCSV(e.target.result);
+    document.getElementById('grFilters').style.display = 'flex';
+    renderGrPreview();
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+function setGrFilter(val, btn) {
+  if (grFilters.has(val)) grFilters.delete(val);
+  else grFilters.add(val);
+  btn.classList.toggle('active', grFilters.has(val));
+  renderGrPreview();
+}
+
+function formatGrDate(d) {
+  if (!d) return '—';
+  const [y, m] = d.split('/');
+  const months = ['Jan.','Fév.','Mar.','Avr.','Mai','Juin','Juil.','Août','Sep.','Oct.','Nov.','Déc.'];
+  return (months[parseInt(m)-1] || m) + ' ' + y;
+}
+
+function grStatusLabel(s) {
+  if (s === 'read') return '<span class="tag read">Lu</span>';
+  if (s === 'currently-reading') return '<span class="tag current">En cours</span>';
+  return '<span class="tag toread">À lire</span>';
+}
+
+function getGrFiltered() {
+  return grRows.filter(r => {
+    const shelf = r['Exclusive Shelf'] || '';
+    return grFilters.has(shelf) && r['Title'];
+  });
+}
+
+function renderGrPreview() {
+  const filtered = getGrFiltered();
+  const tbody = document.getElementById('grBody');
+  tbody.innerHTML = '';
+  filtered.slice(0, 80).forEach(r => {
+    const tr = document.createElement('tr');
+    const rating = parseInt(r['My Rating']) || 0;
+    tr.innerHTML = `
+      <td>${r['Title']}</td>
+      <td style="opacity:0.5">${r['Author'] || '—'}</td>
+      <td>${grStatusLabel(r['Exclusive Shelf'])}</td>
+      <td>${rating ? '<span class="stars">'+'★'.repeat(rating)+'</span>' : '<span style="opacity:0.2">—</span>'}</td>
+      <td>${formatGrDate(r['Date Read'])}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('grPreview').style.display = filtered.length ? 'block' : 'none';
+  document.getElementById('grStats').innerHTML = `<b>${filtered.length}</b> entrées sélectionnées${filtered.length > 80 ? ' (80 affichées)' : ''}`;
+  document.getElementById('grImportBtn').disabled = filtered.length === 0;
+}
+
+function importGoodreads() {
+  const filtered = getGrFiltered();
+  const data = getData();
+  if (!data.livres) data.livres = [];
+
+  const existingTitles = new Set(data.livres.map(l => l.title.toLowerCase()));
+  let added = 0, skipped = 0;
+
+  // Sort: currently-reading first, then read by date desc
+  filtered.sort((a, b) => {
+    const order = {'currently-reading': 0, 'read': 1, 'to-read': 2};
+    const sa = order[a['Exclusive Shelf']] ?? 3;
+    const sb = order[b['Exclusive Shelf']] ?? 3;
+    if (sa !== sb) return sa - sb;
+    const da = a['Date Read'] || a['Date Added'] || '';
+    const db = b['Date Read'] || b['Date Added'] || '';
+    return db.localeCompare(da);
+  });
+
+  filtered.forEach(r => {
+    const title = r['Title'];
+    if (!title) return;
+    if (existingTitles.has(title.toLowerCase())) { skipped++; return; }
+    existingTitles.add(title.toLowerCase());
+
+    const shelf = r['Exclusive Shelf'];
+    const statusMap = { 'read': 'Lu', 'currently-reading': 'En cours', 'to-read': 'À lire' };
+    const dateRead = r['Date Read'];
+    const dateAdded = r['Date Added'];
+
+    data.livres.push({
+      title: title,
+      author: r['Author'] || '',
+      note: '',
+      status: statusMap[shelf] || shelf,
+      date: formatGrDate(dateRead || dateAdded),
+      rating: parseInt(r['My Rating']) || 0
+    });
+    added++;
+  });
+
+  saveData(data);
+  const res = document.getElementById('grResult');
+  res.className = 'result ok';
+  res.style.display = 'block';
+  res.textContent = `✓ ${added} livres importés. ${skipped} doublons ignorés. Rendez-vous sur journal.html pour les voir.`;
+}
+
+// ══ ACTIONS GLOBALES ══
+function clearFilms() {
+  if (!confirm('Vider toute la liste de films ? Cette action est irréversible.')) return;
+  const d = getData(); d.films = []; saveData(d);
+  alert('Films supprimés.');
+}
+function clearLivres() {
+  if (!confirm('Vider toute la liste de livres ?')) return;
+  const d = getData(); d.livres = []; saveData(d);
+  alert('Livres supprimés.');
+}
+function exportData() {
+  const d = getData();
+  const blob = new Blob([JSON.stringify(d, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'site_data_backup.json';
+  a.click();
+}
+
+// Drag & drop
+['lbDrop','grDrop'].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener('dragover', e => { e.preventDefault(); el.classList.add('dragover'); });
+  el.addEventListener('dragleave', () => el.classList.remove('dragover'));
+  el.addEventListener('drop', e => {
+    e.preventDefault(); el.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+    const inputId = id === 'lbDrop' ? 'lbFile' : 'grFile';
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    document.getElementById(inputId).files = dt.files;
+    document.getElementById(inputId).dispatchEvent(new Event('change'));
+  });
+});
+</script>
+</body>
+</html>
