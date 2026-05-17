@@ -8,48 +8,116 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cinzel:wght@400;500&family=Inter:wght@300;400&display=swap" rel="stylesheet">
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    :root{--bg:#0e0d0c;--text:#e8e2d8;--muted:rgba(232,226,216,0.45);--faint:rgba(232,226,216,0.12)}
+    :root{--bg:#0e0d0c;--text:#e8e2d8;--muted:rgba(232,226,216,0.45);--faint:rgba(232,226,216,0.10);--faintest:rgba(232,226,216,0.04)}
     body{background:var(--bg);color:var(--text);font-family:'Cormorant Garamond',serif;min-height:100vh;overflow-x:hidden}
     body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:100;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");opacity:0.6}
-    nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:1.5rem 3rem;border-bottom:0.5px solid var(--faint);background:rgba(14,13,12,0.85);backdrop-filter:blur(12px)}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:1.5rem 3rem;border-bottom:0.5px solid var(--faint);background:rgba(14,13,12,0.88);backdrop-filter:blur(12px)}
     .nav-name{font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.25em;color:var(--text);text-decoration:none;opacity:0.9}
     .nav-links{display:flex;gap:2.5rem;list-style:none}
-    .nav-links a{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.25s}
+    .nav-links a{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.2s}
     .nav-links a:hover,.nav-links a.active{color:var(--text)}
-    .page-header{max-width:1100px;margin:0 auto;padding:8rem 3rem 3rem;border-bottom:0.5px solid var(--faint)}
-    .page-title{font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.22em;color:var(--muted);margin-bottom:1rem}
-    h1{font-family:'Cormorant Garamond',serif;font-size:clamp(30px,4vw,46px);font-weight:300;font-style:italic;color:var(--text);line-height:1.2}
-    .tabs{max-width:1100px;margin:0 auto;display:flex;border-bottom:0.5px solid var(--faint)}
+
+    /* HEADER */
+    .page-header{max-width:1200px;margin:0 auto;padding:8rem 3rem 2.5rem;border-bottom:0.5px solid var(--faint);display:flex;justify-content:space-between;align-items:flex-end;gap:2rem}
+    .page-header h1{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,44px);font-weight:300;font-style:italic;color:var(--text);line-height:1.2}
+    .page-label{font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.22em;color:var(--muted);margin-bottom:0.75rem}
+    .import-link{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(232,226,216,0.25);text-decoration:none;border-bottom:0.5px solid rgba(232,226,216,0.1);padding-bottom:2px;transition:color 0.2s;white-space:nowrap;flex-shrink:0}
+    .import-link:hover{color:var(--muted)}
+
+    /* TABS */
+    .tabs{max-width:1200px;margin:0 auto;display:flex;border-bottom:0.5px solid var(--faint)}
     .tab{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);background:none;border:none;padding:1.25rem 2rem;cursor:pointer;transition:color 0.2s;border-bottom:1px solid transparent;position:relative;top:0.5px}
     .tab.active{color:var(--text);border-bottom-color:var(--text)}
-    .content{max-width:1100px;margin:0 auto;padding:0 3rem 5rem}
+    .tab:hover{color:var(--text)}
+
+    /* TOOLBAR */
+    .toolbar{max-width:1200px;margin:0 auto;padding:1.5rem 3rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap;border-bottom:0.5px solid var(--faint)}
+    .search-wrap{position:relative;flex:1;min-width:180px}
+    .search-wrap input{width:100%;background:var(--faintest);border:0.5px solid var(--faint);color:var(--text);font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.05em;padding:0.55rem 0.75rem 0.55rem 2rem;border-radius:3px;outline:none;transition:border-color 0.2s}
+    .search-wrap input::placeholder{color:rgba(232,226,216,0.2)}
+    .search-wrap input:focus{border-color:rgba(232,226,216,0.3)}
+    .search-icon{position:absolute;left:0.65rem;top:50%;transform:translateY(-50%);font-size:11px;color:rgba(232,226,216,0.2);pointer-events:none}
+    .filter-group{display:flex;gap:0.4rem;flex-wrap:wrap;align-items:center}
+    .filter-label{font-family:'Inter',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(232,226,216,0.25);margin-right:0.25rem}
+    .pill{font-family:'Inter',sans-serif;font-size:9px;letter-spacing:0.08em;padding:4px 10px;border:0.5px solid rgba(232,226,216,0.12);border-radius:20px;background:transparent;color:rgba(232,226,216,0.35);cursor:pointer;transition:all 0.15s;white-space:nowrap}
+    .pill:hover{border-color:rgba(232,226,216,0.35);color:rgba(232,226,216,0.7)}
+    .pill.active{border-color:rgba(232,226,216,0.5);color:var(--text);background:rgba(232,226,216,0.06)}
+    .result-count{font-family:'Inter',sans-serif;font-size:10px;color:rgba(232,226,216,0.2);margin-left:auto;white-space:nowrap}
+
+    /* CONTENT */
+    .content{max-width:1200px;margin:0 auto;padding:0 3rem 6rem}
     .panel{display:none}.panel.active{display:block}
-    .entries-list{padding-top:2.5rem}
-    .entry{display:grid;grid-template-columns:120px 1fr;gap:2rem;padding:2.5rem 0;border-bottom:0.5px solid var(--faint);position:relative}
-    .entry-date{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.12em;color:rgba(232,226,216,0.2);padding-top:4px}
-    .entry-title{font-size:22px;color:var(--text);margin-bottom:0.25rem}
-    .entry-meta{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(232,226,216,0.25);margin-bottom:1rem}
-    .entry-note{font-style:italic;font-size:17px;line-height:1.8;color:rgba(232,226,216,0.5)}
-    .entry-tag{display:inline-block;margin-top:0.75rem;font-family:'Inter',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(232,226,216,0.2);border:0.5px solid rgba(232,226,216,0.12);border-radius:2px;padding:3px 8px}
-    .book-entry{padding:2rem 0;border-bottom:0.5px solid var(--faint);display:flex;justify-content:space-between;align-items:flex-start;gap:2rem;position:relative}
-    .book-title{font-size:20px;color:var(--text);margin-bottom:0.2rem}
-    .book-author{font-style:italic;font-size:15px;color:var(--muted);margin-bottom:0.75rem}
-    .book-note{font-size:16px;line-height:1.75;color:rgba(232,226,216,0.45);max-width:600px}
-    .book-meta{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.1em;color:rgba(232,226,216,0.2);text-align:right;flex-shrink:0;padding-top:4px}
-    footer{border-top:0.5px solid var(--faint);padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;max-width:1100px;margin:0 auto}
+
+    /* FILM GRID */
+    .film-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1px;background:var(--faint);margin-top:0}
+    .film-card{background:var(--bg);padding:1.5rem;position:relative;transition:background 0.2s;cursor:default}
+    .film-card:hover{background:rgba(232,226,216,0.025)}
+    .film-card-year{font-family:'Inter',sans-serif;font-size:9px;letter-spacing:0.1em;color:rgba(232,226,216,0.2);margin-bottom:0.4rem}
+    .film-card-title{font-size:17px;line-height:1.3;color:var(--text);margin-bottom:0.5rem}
+    .film-card-meta{font-family:'Inter',sans-serif;font-size:9px;letter-spacing:0.08em;color:rgba(232,226,216,0.2);margin-bottom:0.75rem;display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap}
+    .film-card-stars{font-size:11px;color:rgba(232,226,216,0.55);letter-spacing:1px}
+    .film-card-note{font-style:italic;font-size:14px;line-height:1.7;color:rgba(232,226,216,0.4);margin-top:0.6rem}
+    .film-card-note:empty::before{content:'Ajouter une note...';opacity:0.25;font-style:italic}
+    .rewatch-badge{font-family:'Inter',sans-serif;font-size:8px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(232,226,216,0.2);border:0.5px solid rgba(232,226,216,0.1);border-radius:2px;padding:1px 5px}
+    .film-delete{display:none;position:absolute;top:0.75rem;right:0.75rem;font-family:'Inter',sans-serif;font-size:9px;background:transparent;border:none;color:rgba(232,226,216,0.15);cursor:pointer;padding:2px 4px;transition:color 0.2s}
+    .film-delete:hover{color:rgba(220,100,100,0.7)}
+    body.edit-active .film-delete{display:block}
+    body.edit-active .film-card-note{outline:0.5px dashed rgba(232,226,216,0.15);outline-offset:4px;border-radius:2px;cursor:text;min-height:1.5rem}
+    body.edit-active .film-card-note:focus{outline-color:rgba(232,226,216,0.4)}
+
+    /* ADD CARD */
+    .add-card{background:transparent;border:0.5px dashed rgba(232,226,216,0.1);display:none;align-items:center;justify-content:center;min-height:160px;cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(232,226,216,0.2)}
+    .add-card:hover{border-color:rgba(232,226,216,0.3);color:rgba(232,226,216,0.5)}
+    body.edit-active .add-card{display:flex}
+
+    /* BOOK LIST */
+    .book-list{padding-top:0}
+    .book-entry{display:grid;grid-template-columns:1fr auto;gap:1.5rem;padding:1.75rem 0;border-bottom:0.5px solid var(--faint);position:relative;align-items:start}
+    .book-title{font-size:20px;color:var(--text);margin-bottom:0.2rem;line-height:1.3}
+    .book-author{font-style:italic;font-size:14px;color:var(--muted);margin-bottom:0.6rem}
+    .book-stars{font-size:12px;color:rgba(232,226,216,0.5);letter-spacing:1px;margin-bottom:0.5rem}
+    .book-note{font-style:italic;font-size:15px;line-height:1.75;color:rgba(232,226,216,0.4);max-width:680px}
+    .book-note:empty::before{content:'Ajouter une note...';opacity:0.3;font-style:italic}
+    .book-right{text-align:right;flex-shrink:0}
+    .book-status{font-family:'Inter',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 8px;border-radius:2px;border:0.5px solid;display:inline-block;margin-bottom:0.4rem}
+    .book-status.lu{border-color:rgba(120,200,140,0.3);color:rgba(120,200,140,0.7)}
+    .book-status.encours{border-color:rgba(200,180,100,0.35);color:rgba(200,180,100,0.75)}
+    .book-status.alire{border-color:rgba(232,226,216,0.12);color:rgba(232,226,216,0.25)}
+    .book-date{font-family:'Inter',sans-serif;font-size:10px;color:rgba(232,226,216,0.18);margin-top:0.3rem}
+    .book-delete{display:none;position:absolute;top:1.75rem;right:-0.5rem;font-family:'Inter',sans-serif;font-size:9px;background:transparent;border:none;color:rgba(232,226,216,0.15);cursor:pointer;padding:2px 4px;transition:color 0.2s}
+    .book-delete:hover{color:rgba(220,100,100,0.7)}
+    body.edit-active .book-delete{display:block}
+    body.edit-active .book-note{outline:0.5px dashed rgba(232,226,216,0.15);outline-offset:4px;border-radius:2px;cursor:text;min-height:1.5rem}
+    body.edit-active .book-note:focus{outline-color:rgba(232,226,216,0.4)}
+
+    .add-book-btn{display:none;width:100%;margin-top:1.5rem;padding:1rem;background:none;border:0.5px dashed rgba(232,226,216,0.12);color:rgba(232,226,216,0.25);font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all 0.2s}
+    .add-book-btn:hover{border-color:rgba(232,226,216,0.3);color:rgba(232,226,216,0.55)}
+    body.edit-active .add-book-btn{display:block}
+
+    /* EMPTY STATE */
+    .empty{padding:4rem 0;text-align:center;font-style:italic;font-size:17px;color:rgba(232,226,216,0.2)}
+
+    footer{border-top:0.5px solid var(--faint);padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto}
     footer p{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.1em;color:rgba(232,226,216,0.2)}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-    .entry,.book-entry{animation:fadeUp 0.3s ease both}
+
+    @media(max-width:900px){
+      .film-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+    }
     @media(max-width:768px){
       nav{padding:1.25rem 1.5rem}.nav-links{gap:1.5rem}
-      .page-header{padding:7rem 1.5rem 2rem}.tabs .tab{padding:1rem 1.25rem}
-      .content{padding:0 1.5rem 4rem}.entry{grid-template-columns:1fr;gap:0.5rem}
-      .book-entry{flex-direction:column;gap:0.5rem}.book-meta{text-align:left}
+      .page-header{padding:7rem 1.5rem 2rem;flex-direction:column;align-items:flex-start;gap:1rem}
+      .toolbar{padding:1.25rem 1.5rem;gap:0.75rem}
+      .content{padding:0 0 5rem}
+      .film-card{padding:1.25rem}
+      .book-entry{padding:1.5rem 1.5rem}
       footer{padding:1.5rem;flex-direction:column;gap:0.5rem}
     }
   </style>
 </head>
 <body>
+
   <nav>
     <a href="index.html" class="nav-name">VOTRE NOM</a>
     <ul class="nav-links">
@@ -61,8 +129,11 @@
   </nav>
 
   <header class="page-header">
-    <p class="page-title">Journal</p>
-    <h1>Ce que je vois,<br>ce que je lis.</h1>
+    <div>
+      <p class="page-label">Journal</p>
+      <h1>Ce que je vois,<br>ce que je lis.</h1>
+    </div>
+    <a href="import.html" class="import-link">↑ Importer des données</a>
   </header>
 
   <div class="tabs">
@@ -70,14 +141,55 @@
     <button class="tab" onclick="showTab('livres')">Livres</button>
   </div>
 
+  <!-- TOOLBAR FILMS -->
+  <div class="toolbar" id="toolbar-films">
+    <div class="search-wrap">
+      <span class="search-icon">◎</span>
+      <input type="text" id="search-films" placeholder="Rechercher un titre..." oninput="renderFilms()">
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Note</span>
+      <button class="pill active" data-val="0" onclick="setFilmFilter('rating',0,this)">Tous</button>
+      <button class="pill" data-val="3" onclick="setFilmFilter('rating',3,this)">≥ ★★★</button>
+      <button class="pill" data-val="4" onclick="setFilmFilter('rating',4,this)">≥ ★★★★</button>
+      <button class="pill" data-val="4.5" onclick="setFilmFilter('rating',4.5,this)">≥ ★★★★½</button>
+    </div>
+    <div class="filter-group" id="film-year-filters">
+      <span class="filter-label">Année</span>
+    </div>
+    <span class="result-count" id="film-count"></span>
+  </div>
+
+  <!-- TOOLBAR LIVRES -->
+  <div class="toolbar" id="toolbar-livres" style="display:none">
+    <div class="search-wrap">
+      <span class="search-icon">◎</span>
+      <input type="text" id="search-livres" placeholder="Rechercher un titre ou auteur..." oninput="renderLivres()">
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Statut</span>
+      <button class="pill active" data-val="all" onclick="setLivreFilter('status','all',this)">Tous</button>
+      <button class="pill" data-val="Lu" onclick="setLivreFilter('status','Lu',this)">Lus</button>
+      <button class="pill" data-val="En cours" onclick="setLivreFilter('status','En cours',this)">En cours</button>
+      <button class="pill" data-val="À lire" onclick="setLivreFilter('status','À lire',this)">À lire</button>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Note</span>
+      <button class="pill active" data-val="0" onclick="setLivreFilter('rating',0,this)">Tous</button>
+      <button class="pill" data-val="3" onclick="setLivreFilter('rating',3,this)">≥ ★★★</button>
+      <button class="pill" data-val="4" onclick="setLivreFilter('rating',4,this)">≥ ★★★★</button>
+      <button class="pill" data-val="5" onclick="setLivreFilter('rating',5,this)">★★★★★</button>
+    </div>
+    <span class="result-count" id="livre-count"></span>
+  </div>
+
   <div class="content">
     <div class="panel active" id="panel-films">
-      <div class="entries-list" id="list-films"></div>
-      <button class="add-entry-btn" onclick="addFilm()">+ Ajouter un film / une série</button>
+      <div class="film-grid" id="list-films"></div>
     </div>
     <div class="panel" id="panel-livres">
-      <div class="entries-list" id="list-livres"></div>
-      <button class="add-entry-btn" onclick="addLivre()">+ Ajouter un livre</button>
+      <div class="book-list" id="list-livres"></div>
+      <button class="add-book-btn" onclick="addLivre()">+ Ajouter un livre</button>
     </div>
   </div>
 
@@ -88,118 +200,249 @@
 
   <script src="admin.js"></script>
   <script>
+    // ── Filters state
+    const filmFilters = { rating: 0 };
+    const livreFilters = { status: 'all', rating: 0 };
+
+    // ── Tab switch
     function showTab(name) {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('toolbar-films').style.display = name === 'films' ? 'flex' : 'none';
+      document.getElementById('toolbar-livres').style.display = name === 'livres' ? 'flex' : 'none';
       document.querySelector('[onclick="showTab(\''+name+'\')"]').classList.add('active');
       document.getElementById('panel-'+name).classList.add('active');
     }
     if (window.location.hash === '#livres') setTimeout(() => showTab('livres'), 50);
 
-    // ── Rendu Films
-    function renderFilms() {
+    // ── Stars renderer
+    function starsHtml(rating, max) {
+      if (!rating || rating === 0) return '';
+      const n = parseFloat(rating);
+      const full = Math.floor(n);
+      const half = n % 1 >= 0.5;
+      return '★'.repeat(full) + (half ? '½' : '');
+    }
+
+    // ── FILMS ─────────────────────────────────────────────────────
+    function setFilmFilter(type, val, btn) {
+      filmFilters[type] = parseFloat(val);
+      btn.closest('.filter-group').querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderFilms();
+    }
+
+    function buildYearFilters() {
       const data = getData();
-      const list = document.getElementById('list-films');
-      list.innerHTML = '';
-      (data.films || []).forEach((f, i) => {
-        const el = document.createElement('div');
-        el.className = 'entry';
-        el.innerHTML = `
-          <div class="entry-date" data-edit="film-${i}-date" ${editMode?'contenteditable=true':''}>${f.date}</div>
-          <div>
-            <p class="entry-title" data-edit="film-${i}-title" ${editMode?'contenteditable=true':''}>${f.title}</p>
-            <p class="entry-meta" data-edit="film-${i}-meta" ${editMode?'contenteditable=true':''}>${f.meta}</p>
-            <p class="entry-note" data-edit="film-${i}-note" ${editMode?'contenteditable=true':''}>${f.note}</p>
-            <span class="entry-tag" data-edit="film-${i}-tag" ${editMode?'contenteditable=true':''}>${f.tag}</span>
-          </div>
-          <button class="entry-delete" onclick="deleteFilm(${i})" title="Supprimer">× Supprimer</button>
-        `;
-        el.querySelectorAll('[data-edit]').forEach(node => {
-          node.addEventListener('input', () => saveEntryFilm(i, node.dataset.edit.split('-').pop(), node.innerHTML));
-        });
-        list.appendChild(el);
+      const years = [...new Set((data.films||[]).map(f => {
+        const m = (f.date||'').match(/\d{4}/);
+        return m ? m[0] : null;
+      }).filter(Boolean))].sort((a,b) => b-a);
+
+      const wrap = document.getElementById('film-year-filters');
+      wrap.innerHTML = '<span class="filter-label">Année</span>';
+      const allBtn = document.createElement('button');
+      allBtn.className = 'pill active'; allBtn.textContent = 'Toutes';
+      allBtn.onclick = () => { filmFilters.year = null; wrap.querySelectorAll('.pill').forEach(b=>b.classList.remove('active')); allBtn.classList.add('active'); renderFilms(); };
+      wrap.appendChild(allBtn);
+
+      years.forEach(y => {
+        const btn = document.createElement('button');
+        btn.className = 'pill'; btn.textContent = y;
+        btn.onclick = () => {
+          filmFilters.year = y;
+          wrap.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+          btn.classList.add('active');
+          renderFilms();
+        };
+        wrap.appendChild(btn);
       });
     }
 
-    function saveEntryFilm(i, field, value) {
+    function getFilmsFiltered() {
       const data = getData();
-      if (data.films[i]) data.films[i][field] = value;
-      saveData(data);
+      const q = (document.getElementById('search-films')?.value || '').toLowerCase();
+      return (data.films || []).filter(f => {
+        if (filmFilters.rating > 0 && (f.rating||0) < filmFilters.rating) return false;
+        if (filmFilters.year) { const m=(f.date||'').match(/\d{4}/); if(!m||m[0]!==filmFilters.year) return false; }
+        if (q && !f.title.toLowerCase().includes(q)) return false;
+        return true;
+      });
     }
 
-    function deleteFilm(i) {
-      if (!confirm('Supprimer cette entrée ?')) return;
+    function renderFilms() {
+      const films = getFilmsFiltered();
+      const list = document.getElementById('list-films');
+      list.innerHTML = '';
+
+      if (!films.length) {
+        list.innerHTML = '<div class="empty" style="grid-column:1/-1">Aucun film trouvé.</div>';
+        document.getElementById('film-count').textContent = '0 résultat';
+        return;
+      }
+
+      document.getElementById('film-count').textContent = films.length + ' entrée' + (films.length > 1 ? 's' : '');
+
+      films.forEach((f, fi) => {
+        // Find real index in data
+        const data = getData();
+        const realIdx = data.films.indexOf(f) !== -1 ? data.films.indexOf(f) : data.films.findIndex(x => x.title === f.title && x.date === f.date);
+
+        const card = document.createElement('div');
+        card.className = 'film-card';
+
+        const yearMatch = (f.date||'').match(/\d{4}/);
+        const metaParts = [];
+        if (f.meta) metaParts.push(f.meta);
+
+        card.innerHTML = `
+          <div class="film-card-year">${f.date || ''}</div>
+          <div class="film-card-title">${f.title}</div>
+          <div class="film-card-meta">
+            ${f.rating ? '<span class="film-card-stars">'+starsHtml(f.rating)+'</span>' : ''}
+            ${f.meta && f.meta.includes('Revu') ? '<span class="rewatch-badge">Revu</span>' : ''}
+            ${f.tag ? '<span style="opacity:0.4;font-size:9px;letter-spacing:0.06em;">'+f.tag+'</span>' : ''}
+          </div>
+          <div class="film-card-note" data-idx="${realIdx}"
+            ${editMode ? 'contenteditable="true"' : ''}
+            onfocus="this.dataset.before=this.innerHTML"
+            onblur="saveFilmNote(${realIdx},this.innerHTML)"
+          >${f.note || ''}</div>
+          <button class="film-delete" onclick="deleteFilm(${realIdx})">×</button>
+        `;
+        list.appendChild(card);
+      });
+
+      // Add card for new entry
+      if (editMode) {
+        const addCard = document.createElement('div');
+        addCard.className = 'film-card add-card';
+        addCard.textContent = '+ Ajouter';
+        addCard.onclick = addFilm;
+        list.appendChild(addCard);
+      }
+    }
+
+    function saveFilmNote(idx, val) {
       const data = getData();
-      data.films.splice(i, 1);
+      if (data.films[idx]) { data.films[idx].note = val; saveData(data); }
+    }
+
+    function deleteFilm(idx) {
+      if (!confirm('Supprimer ce film ?')) return;
+      const data = getData();
+      data.films.splice(idx, 1);
       saveData(data);
+      buildYearFilters();
       renderFilms();
-      showToast('Entrée supprimée');
+      showToast('Supprimé');
     }
 
     function addFilm() {
       const data = getData();
-      data.films.unshift({ date: 'Mois AAAA', title: 'Titre', meta: 'Réalisateur · Année · Type', note: 'Votre note ici.', tag: 'Film' });
+      if (!data.films) data.films = [];
+      data.films.unshift({ date: 'Mois AAAA', title: 'Titre', meta: '', note: '', tag: 'Film', rating: 0 });
       saveData(data);
+      buildYearFilters();
       renderFilms();
       showToast('Entrée ajoutée');
     }
 
-    // ── Rendu Livres
-    function renderLivres() {
+    // ── LIVRES ────────────────────────────────────────────────────
+    function setLivreFilter(type, val, btn) {
+      if (type === 'rating') livreFilters.rating = parseFloat(val);
+      else livreFilters.status = val;
+      btn.closest('.filter-group').querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderLivres();
+    }
+
+    function getLivresFiltered() {
       const data = getData();
+      const q = (document.getElementById('search-livres')?.value || '').toLowerCase();
+      return (data.livres || []).filter(l => {
+        if (livreFilters.status !== 'all' && l.status !== livreFilters.status) return false;
+        if (livreFilters.rating > 0 && (l.rating||0) < livreFilters.rating) return false;
+        if (q && !(l.title||'').toLowerCase().includes(q) && !(l.author||'').toLowerCase().includes(q)) return false;
+        return true;
+      });
+    }
+
+    function statusClass(s) {
+      if (s === 'Lu') return 'lu';
+      if (s === 'En cours') return 'encours';
+      return 'alire';
+    }
+
+    function renderLivres() {
+      const livres = getLivresFiltered();
       const list = document.getElementById('list-livres');
       list.innerHTML = '';
-      (data.livres || []).forEach((l, i) => {
+
+      if (!livres.length) {
+        list.innerHTML = '<div class="empty">Aucun livre trouvé.</div>';
+        document.getElementById('livre-count').textContent = '0 résultat';
+        return;
+      }
+
+      document.getElementById('livre-count').textContent = livres.length + ' entrée' + (livres.length > 1 ? 's' : '');
+
+      livres.forEach(l => {
+        const data = getData();
+        const realIdx = data.livres.findIndex(x => x.title === l.title && x.author === l.author);
+
         const el = document.createElement('div');
         el.className = 'book-entry';
         el.innerHTML = `
-          <div class="book-main">
-            <p class="book-title" data-edit="livre-${i}-title" ${editMode?'contenteditable=true':''}>${l.title}</p>
-            <p class="book-author" data-edit="livre-${i}-author" ${editMode?'contenteditable=true':''}>${l.author}</p>
-            <p class="book-note" data-edit="livre-${i}-note" ${editMode?'contenteditable=true':''}>${l.note}</p>
+          <div>
+            <div class="book-title">${l.title}</div>
+            <div class="book-author">${l.author || ''}</div>
+            ${l.rating ? '<div class="book-stars">'+starsHtml(l.rating)+'</div>' : ''}
+            <div class="book-note" data-idx="${realIdx}"
+              ${editMode ? 'contenteditable="true"' : ''}
+              onblur="saveLivreNote(${realIdx},this.innerHTML)"
+            >${l.note || ''}</div>
           </div>
-          <div class="book-meta">
-            <span data-edit="livre-${i}-status" ${editMode?'contenteditable=true':''}>${l.status}</span><br>
-            <span data-edit="livre-${i}-date" ${editMode?'contenteditable=true':''}>${l.date}</span>
+          <div class="book-right">
+            <div class="book-status ${statusClass(l.status)}">${l.status || ''}</div>
+            <div class="book-date">${l.date || ''}</div>
           </div>
-          <button class="entry-delete" onclick="deleteLivre(${i})" title="Supprimer">× Supprimer</button>
+          <button class="book-delete" onclick="deleteLivre(${realIdx})">×</button>
         `;
-        el.querySelectorAll('[data-edit]').forEach(node => {
-          node.addEventListener('input', () => saveEntryLivre(i, node.dataset.edit.split('-').pop(), node.innerHTML));
-        });
         list.appendChild(el);
       });
     }
 
-    function saveEntryLivre(i, field, value) {
+    function saveLivreNote(idx, val) {
       const data = getData();
-      if (data.livres[i]) data.livres[i][field] = value;
-      saveData(data);
+      if (data.livres[idx]) { data.livres[idx].note = val; saveData(data); }
     }
 
-    function deleteLivre(i) {
-      if (!confirm('Supprimer cette entrée ?')) return;
+    function deleteLivre(idx) {
+      if (!confirm('Supprimer ce livre ?')) return;
       const data = getData();
-      data.livres.splice(i, 1);
+      data.livres.splice(idx, 1);
       saveData(data);
       renderLivres();
-      showToast('Entrée supprimée');
+      showToast('Supprimé');
     }
 
     function addLivre() {
       const data = getData();
-      data.livres.unshift({ title: 'Titre', author: 'Auteur', note: 'Votre note ici.', status: 'En cours', date: 'Mois AAAA' });
+      if (!data.livres) data.livres = [];
+      data.livres.unshift({ title: 'Titre', author: 'Auteur', note: '', status: 'Lu', date: 'Mois AAAA', rating: 0 });
       saveData(data);
       renderLivres();
       showToast('Entrée ajoutée');
     }
 
-    // ── Re-render quand le mode édition change
+    // ── Edit mode hooks
     window.onEditModeEnabled = () => { renderFilms(); renderLivres(); };
     window.onEditModeDisabled = () => { renderFilms(); renderLivres(); };
 
     // ── Init
     document.addEventListener('DOMContentLoaded', () => {
+      buildYearFilters();
       renderFilms();
       renderLivres();
     });
